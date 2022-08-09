@@ -42,7 +42,7 @@ packer.startup(
         -- 启动页
         use("glepnir/dashboard-nvim")
         -- 代码高亮
-        use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
+        use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" , requires = {"p00f/nvim-ts-rainbow"}})
         -- LSP
         use({ "williamboman/nvim-lsp-installer" --[[, commit = "36b44679f7cc73968dbb3b09246798a19f7c14e0" --]] })
         use({ "neovim/nvim-lspconfig" })
@@ -68,4 +68,12 @@ packer.startup(
 
         use("tami5/lspsaga.nvim")
         use("windwp/nvim-autopairs")
+
+        -- git 
+        use("lewis6991/gitsigns.nvim")
+        use ('sindrets/diffview.nvim')
+
+        use("folke/which-key.nvim")
+        use "RRethy/vim-illuminate" -- highlight undercursor word   --  NOTE: 可能造成卡顿
+
     end)

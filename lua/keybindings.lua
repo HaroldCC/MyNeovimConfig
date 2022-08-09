@@ -161,6 +161,7 @@ pluginKeys.mapLSP = function(mapbuf)
     mapbuf("n", "ej", "<cmd>Lspsaga diagnostic_jump_next<CR>", opt)
     mapbuf("n", "ek", "<cmd>Lspsaga diagnostic_jump_prev<CR>", opt)
     mapbuf("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opt)
+    mapbuf("i","<tab>", "<CR>", opt)
     -- 没用到
     -- mapbuf('n', '<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opt)
     -- mapbuf("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opt)

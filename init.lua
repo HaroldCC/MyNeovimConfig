@@ -16,6 +16,11 @@ require("plugin-config.dashboard")
 require("plugin-config.project")
 require("plugin-config.nvim-treesitter")
 require("plugin-config.nvim-autopairs")
+require("plugin-config.gitsign")
+require("plugin-config.diffview")
+require("plugin-config.indent-blankline")
+require("plugin-config.which-key")
+require("plugin-config.vim-illuminate")
 
 -- LSP
 require("lsp.setup")
