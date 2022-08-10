@@ -26,3 +26,5 @@ require("plugin-config.vim-illuminate")
 require("lsp.setup")
 require("lsp.complete")
 require("lsp.ui")
+require("lsp.cmp")
+
