@@ -28,13 +28,13 @@ map("n", "sc", "<C-w>c", opt)
 -- 关闭其他
 map("n", "so", "<C-w>o", opt)
 -- Ctrl + hjkl  窗口之间跳转
-map("n", "<C-h>", "<C-w>h", opt)
-map("n", "<C-j>", "<C-w>j", opt)
-map("n", "<C-k>", "<C-w>k", opt)
-map("n", "<C-l>", "<C-w>l", opt)
+map("n", "<A-h>", "<C-w>h", opt)
+map("n", "<A-j>", "<C-w>j", opt)
+map("n", "<A-k>", "<C-w>k", opt)
+map("n", "<A-l>", "<C-w>l", opt)
 -- 左右比例控制
-map("n", "<C-Left>", ":vertical resize -2<CR>", opt)
-map("n", "<C-Right>", ":vertical resize +2<CR>", opt)
+map("n", ">", ":vertical resize -2<CR>", opt)
+map("n", "<", ":vertical resize +2<CR>", opt)
 map("n", "s,", ":vertical resize -20<CR>", opt)
 map("n", "s.", ":vertical resize +20<CR>", opt)
 -- 上下比例
@@ -81,51 +81,52 @@ local pluginKeys = {}
 map("n", ";e", ":NvimTreeToggle<CR>", opt)
 -- 列表快捷键
 pluginKeys.nvimTreeList = { -- 打开文件或文件夹
-{
-    key = {"<CR>", "o", "<2-LeftMouse>"},
-    action = "edit"
-}, -- 分屏打开文件
-{
-    key = "v",
-    action = "vsplit"
-}, {
-    key = "h",
-    action = "split"
-}, -- 显示隐藏文件
-{
-    key = "i",
-    action = "toggle_custom"
-}, -- 对应 filters 中的 custom (node_modules)
-{
-    key = ".",
-    action = "toggle_dotfiles"
-}, -- Hide (dotfiles)
--- 文件操作
-{
-    key = "<F5>",
-    action = "refresh"
-}, {
-    key = "a",
-    action = "create"
-}, {
-    key = "d",
-    action = "remove"
-}, {
-    key = "r",
-    action = "rename"
-}, {
-    key = "x",
-    action = "cut"
-}, {
-    key = "c",
-    action = "copy"
-}, {
-    key = "p",
-    action = "paste"
-}, {
-    key = "s",
-    action = "system_open"
-}}
+    {
+        key = {"<CR>", "o", "<2-LeftMouse>"},
+        action = "edit"
+    }, -- 分屏打开文件
+    {
+        key = "v",
+        action = "vsplit"
+    }, {
+        key = "h",
+        action = "split"
+    }, -- 显示隐藏文件
+    {
+        key = "i",
+        action = "toggle_custom"
+    }, -- 对应 filters 中的 custom (node_modules)
+    {
+        key = ".",
+        action = "toggle_dotfiles"
+    }, -- Hide (dotfiles)
+    -- 文件操作
+    {
+        key = "<F5>",
+        action = "refresh"
+    }, {
+        key = "a",
+        action = "create"
+    }, {
+        key = "d",
+        action = "remove"
+    }, {
+        key = "r",
+        action = "rename"
+    }, {
+        key = "x",
+        action = "cut"
+    }, {
+        key = "c",
+        action = "copy"
+    }, {
+        key = "p",
+        action = "paste"
+    }, {
+        key = "s",
+        action = "system_open"
+    }
+}
 
 -- bufferline 插件相关快捷键
 -- 左右Tab切换
@@ -145,16 +146,18 @@ map("n", "<C-p>", ":Telescope find_files<CR>", opt)
 -- 全局搜索
 map("n", "<C-f>", ":Telescope live_grep<CR>", opt)
 
+local actions = require "telescope.actions"
+
 pluginKeys.telescopeList = {
     i = {
         -- 上下移动
-        ["<C-j>"] = "move_selection_next",
-        ["<C-k>"] = "move_selection_previous",
+        ["<C-n>"] = "move_selection_next",
+        ["<C-p>"] = "move_selection_previous",
         ["<Down>"] = "move_selection_next",
         ["<Up>"] = "move_selection_previous",
         -- 历史记录
-        ["<C-n>"] = "cycle_history_next",
-        ["<C-p>"] = "cycle_history_prev",
+        ["<C-j>"] = "cycle_history_next",
+        ["<C-k>"] = "cycle_history_prev",
         -- 关闭窗口
         ["<C-c>"] = "close",
         -- 预览窗口上下滚动
@@ -192,7 +195,7 @@ pluginKeys.mapLSP = function(mapbuf)
     mapbuf("n", "ek", "<cmd>Lspsaga diagnostic_jump_prev<CR>", opt)
     mapbuf("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opt)
     -- mapbuf("i","<tab>", "<CR>", opt)
-    --mapbuf("i", "<tab>", mapbuf.mapping.complete(), opt)
+    -- mapbuf("i", "<tab>", mapbuf.mapping.complete(), opt)
     -- 没用到
     -- mapbuf('n', '<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opt)
     -- mapbuf("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opt)
@@ -217,22 +220,26 @@ pluginKeys.cmp = function(cmp)
 
     return {
         -- 出现补全
-        ["<ctrl-i>"] = cmp.mapping(cmp.mapping.complete(), {"i", "c"}),
+        ["<C-i>"] = cmp.mapping(cmp.mapping.complete(), {"i", "c"}),
         -- 取消
-        ["<ESC>"] = cmp.mapping({
-            i = cmp.mapping.abort(),
-            c = cmp.mapping.close()
-        }),
+        -- ["<ESC>"] = cmp.mapping({
+        --     i = cmp.mapping.close(),
+        --     c = cmp.mapping.close()
+        -- }),
         -- 上一个
         ["<C-p>"] = cmp.mapping.select_prev_item(),
         -- 下一个
         ["<C-n>"] = cmp.mapping.select_next_item(),
         -- 确认
-        ["<TAB>"] = cmp.mapping.confirm({
-            select = true,
-            behavior = cmp.ConfirmBehavior.Replace,
-      --      c = cmp.mapping.close()
-        }),
+        ["<TAB>"] = cmp.mapping(function (fallback)
+            if cmp.visible() then
+                cmp.select_next_item()
+            elseif has_words_before() then
+                cmp.complete()
+            else
+                fallback()
+            end 
+        end,{"i","c"}),
         -- 如果窗口内容太多，可以滚动
         ["<C-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), {"i", "c"}),
         ["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), {"i", "c"}),
@@ -249,7 +256,7 @@ pluginKeys.cmp = function(cmp)
             if vim.fn["vsnip#jumpable"](-1) == 1 then
                 feedkey("<Plug>(vsnip-jump-prev)", "")
             end
-        end, {"i", "s"}),
+        end, {"i", "s"})
 
         -- Super Tab
         --[=[
@@ -272,7 +279,7 @@ pluginKeys.cmp = function(cmp)
                 feedkey("<Plug>(vsnip-jump-prev)", "")
             end
         end, {"i", "s"})
-        ]=]--
+        ]=] --
         -- end of super Tab
     }
 end

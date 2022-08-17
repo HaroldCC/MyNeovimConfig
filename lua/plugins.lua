@@ -44,8 +44,10 @@ packer.startup(
         -- 代码高亮
         use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" , requires = {"p00f/nvim-ts-rainbow"}})
         -- LSP
-        use({ "williamboman/nvim-lsp-installer" --[[, commit = "36b44679f7cc73968dbb3b09246798a19f7c14e0" --]] })
-        use({ "neovim/nvim-lspconfig" })
+        --use({ "williamboman/nvim-lsp-installer" --[[, commit = "36b44679f7cc73968dbb3b09246798a19f7c14e0" --]] })
+        --use({ "neovim/nvim-lspconfig" })
+        use { "williamboman/mason.nvim" }
+        use { "williamboman/mason-lspconfig.nvim" }
         -- 补全引擎
         use("hrsh7th/nvim-cmp")
         -- snippet 引擎
