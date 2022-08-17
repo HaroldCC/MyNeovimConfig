@@ -19,14 +19,21 @@ for name, _ in pairs(servers) do
     end
 end
 
+local opts = {cmd={"clangd", "--background-index", "--clang-tidy", "--compile-commands-dir=compile_commands","--cross-file-rename=true","--pch-storage=disk"}}
+
 lsp_installer.on_server_ready(function(server)
     local config = servers[server.name]
     if config == nil then
         return
     end
+
     if config.on_setup then
         config.on_setup(server)
     else
-        server:setup({})
+        if server.name=="clangd" then
+            server:setup(opts)
+        else
+            server:setup({})
+        end
     end
 end)
