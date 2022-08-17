@@ -122,15 +122,24 @@ nvim_tree.setup({
 					default = "", --
 					symlink = "",
 					bookmark = "",
-					git = {
-						unstaged = "",
-						staged = "", --
-						unmerged = "שׂ",
-						renamed = "", --
-						untracked = "ﲉ",
-						deleted = "",
-						ignored = "", --◌
-					},
+					-- git = {
+					-- 	unstaged = "",
+					-- 	staged = "", --
+					-- 	unmerged = "שׂ",
+					-- 	renamed = "", --
+					-- 	untracked = "ﲉ",
+					-- 	deleted = "",
+					-- 	ignored = "", --◌
+					-- },
+                    git = {
+					unstaged = "✗",
+					staged = "✓",
+					unmerged = "",
+					renamed = "➜",
+					untracked = "★",
+					deleted = "",
+					ignored = "◌",
+				  },
 					folder = {
 						-- arrow_open = "",
 						-- arrow_closed = "",
@@ -144,15 +153,7 @@ nvim_tree.setup({
 						symlink_open = "",
 					},
 				},
-				git = {
-					unstaged = "✗",
-					staged = "✓",
-					unmerged = "",
-					renamed = "➜",
-					untracked = "★",
-					deleted = "",
-					ignored = "◌",
-				  },
+				
 			},
 		},
 		hijack_directories = {

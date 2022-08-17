@@ -1,5 +1,9 @@
---local lsp_installer = require("nvim-lsp-installer")
---local lsp_installer = require("mason")
+require("nvim-lsp-installer").setup({
+    -- 自动安装 Language Servers
+    automatic_installation = true
+})
+local lspconfig = require("lspconfig")
+
 
 -- 安装列表
 -- { key: 语言 value: 配置文件 }
@@ -9,39 +13,12 @@ local servers = {
     sumneko_lua = require("lsp.config.lua"), -- lua/lsp/config/lua.lua
     clangd      = require("lsp.config.c_cpp"),
 }
--- 自动安装 Language Servers
--- for name, _ in pairs(servers) do
---     local server_is_found, server = lsp_installer.get_server(name)
---     if server_is_found then
---         if not server:is_installed() then
---             print("Installing " .. name)
---             server:install()
---         end
---     end
--- end
-
--- lsp_installer.on_server_ready(function(server)
---     local config = servers[server.name]
---     if config == nil then
---         return
---     end
---     if config.on_setup then
---         config.on_setup(server)
---     else
---         server:setup({})
---     end
--- end)
-
-require("mason").setup({
-    ui = {
-        icons = {
-            package_installed = "✓",
-            package_pending = "➜",
-            package_uninstalled = "✗"
-        }
-    }
-})
-require("mason-lspconfig").setup({
-    automatic_installation = {"sumneko_lua", "clangd"},
-    ensure_installed = {"sumneko_lua", "clangd"},
-})
+for name, config in pairs(servers) do
+    if config ~= nil and type(config) == "table" then
+        -- 自定义初始化配置文件必须实现on_setup 方法
+        config.on_setup(lspconfig[name])
+    else
+        -- 使用默认参数
+        lspconfig[name].setup({})
+    end
+end
