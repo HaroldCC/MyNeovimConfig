@@ -22,6 +22,8 @@ cmp.setup({
         name = "nvim_lsp"
     }, -- For vsnip users.
     {
+        name = "nvim_lsp_signature_help"
+    }, {
         name = "vsnip"
     } -- For luasnip users.
     -- { name = 'luasnip' },
@@ -44,7 +46,6 @@ cmp.setup({
 
 -- / 查找模式使用 buffer 源
 cmp.setup.cmdline("/", {
-    mapping = cmp.mapping.preset.cmdline(),
     sources = {{
         name = "buffer"
     }}

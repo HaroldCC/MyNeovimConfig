@@ -1,3 +1,10 @@
+-- Modes
+--   normal_mode = "n",
+--   insert_mode = "i",
+--   visual_mode = "v",
+--   visual_block_mode = "x",
+--   term_mode = "t",
+--   command_mode = "c",
 -- 设置空格键为<leader>
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
@@ -10,6 +17,20 @@ local opt = {
 
 -- 语法格式
 -- map('模式', '按键', '映射为', 'options')
+
+-- 行首行尾移动
+map("v", "L", "$", opt)
+map("v", "H", "0", opt)
+map("n", "L", "$", opt)
+map("n", "H", "0", opt)
+map("i", "<A-h>", "<ESC>I", {
+    noremap = false,
+    silent = true
+})
+map("i", "<A-l>", "<ESC>A", {
+    noremap = false,
+    silent = true
+})
 
 -- 设置Ctrl + s 进行保存
 map("n", "<C-s>", ":w<CR>", opt)
@@ -68,65 +89,84 @@ map("n", "q", ":q<CR>", opt)
 map("n", "qq", ":q!<CR>", opt)
 map("n", "Q", ":qa!<CR>", opt)
 
--- insert 模式下，跳到行首行尾
-map("i", "<C-h>", "<ESC>I", opt)
-map("i", "<C-l>", "<ESC>A", opt)
-
 -- nvim-tree插件相关快捷键
 -- 插件快捷键
 local pluginKeys = {}
+
+-- treesitter 折叠
+map("n", "zf", ":foldclose<CR>", opt)
+map("n", "zo", ":foldopen<CR>", opt)
 
 -- nvim-tree
 -- ; + e 键打开关闭tree
 map("n", ";e", ":NvimTreeToggle<CR>", opt)
 -- 列表快捷键
 pluginKeys.nvimTreeList = { -- 打开文件或文件夹
-    {
-        key = {"<CR>", "o", "<2-LeftMouse>"},
-        action = "edit"
-    }, -- 分屏打开文件
-    {
-        key = "v",
-        action = "vsplit"
-    }, {
-        key = "h",
-        action = "split"
-    }, -- 显示隐藏文件
-    {
-        key = "i",
-        action = "toggle_custom"
-    }, -- 对应 filters 中的 custom (node_modules)
-    {
-        key = ".",
-        action = "toggle_dotfiles"
-    }, -- Hide (dotfiles)
-    -- 文件操作
-    {
-        key = "<F5>",
-        action = "refresh"
-    }, {
-        key = "a",
-        action = "create"
-    }, {
-        key = "d",
-        action = "remove"
-    }, {
-        key = "r",
-        action = "rename"
-    }, {
-        key = "x",
-        action = "cut"
-    }, {
-        key = "c",
-        action = "copy"
-    }, {
-        key = "p",
-        action = "paste"
-    }, {
-        key = "s",
-        action = "system_open"
-    }
-}
+{
+    key = {"<CR>", "o", "<2-LeftMouse>"},
+    action = "edit"
+}, -- v分屏打开文件
+{
+    key = "v",
+    action = "vsplit"
+}, -- h分屏打开文件
+{
+    key = "h",
+    action = "split"
+}, -- Ignore (node_modules)
+{
+    key = "i",
+    action = "toggle_ignored"
+}, -- Hide (dotfiles)
+{
+    key = ".",
+    action = "toggle_dotfiles"
+}, {
+    key = "R",
+    action = "refresh"
+}, -- 文件操作
+{
+    key = "a",
+    action = "create"
+}, {
+    key = "d",
+    action = "remove"
+}, {
+    key = "r",
+    action = "rename"
+}, {
+    key = "x",
+    action = "cut"
+}, {
+    key = "c",
+    action = "copy"
+}, {
+    key = "p",
+    action = "paste"
+}, {
+    key = "y",
+    action = "copy_name"
+}, {
+    key = "Y",
+    action = "copy_path"
+}, {
+    key = "gy",
+    action = "copy_absolute_path"
+}, {
+    key = "I",
+    action = "toggle_file_info"
+}, {
+    key = "n",
+    action = "tabnew"
+}, -- 进入下一级
+{
+    key = {"]"},
+    action = "cd"
+}, -- 进入上一级
+{
+    key = {"["},
+    action = "dir_up"
+}}
 
 -- bufferline 插件相关快捷键
 -- 左右Tab切换
@@ -165,6 +205,29 @@ pluginKeys.telescopeList = {
         ["<C-d>"] = "preview_scrolling_down"
     }
 }
+
+-- 代码注释插件
+-- see ./lua/plugin-config/comment.lua
+pluginKeys.comment = {
+    -- Normal 模式快捷键
+    toggler = {
+        line = "gcc", -- 行注释
+        block = "gbc" -- 块注释
+    },
+    -- Visual 模式
+    opleader = {
+        line = "gc",
+        bock = "gb"
+    }
+}
+
+-- ctrl + /
+map("n", "<C-_>", "gcc", {
+    noremap = false
+})
+map("v", "<C-_>", "gcc", {
+    noremap = false
+})
 
 -- lsp 回调函数快捷键设置
 pluginKeys.mapLSP = function(mapbuf)
@@ -231,15 +294,18 @@ pluginKeys.cmp = function(cmp)
         -- 下一个
         ["<C-n>"] = cmp.mapping.select_next_item(),
         -- 确认
-        ["<TAB>"] = cmp.mapping(function (fallback)
+        ["<TAB>"] = cmp.mapping.confirm({
+            select = true,
+            behavior = cmp.ConfirmBehavior.Replace
+        }), --[[(function(fallback)
             if cmp.visible() then
                 cmp.select_next_item()
             elseif has_words_before() then
                 cmp.complete()
             else
                 fallback()
-            end 
-        end,{"i","c"}),
+            end
+        end, {"i", "c"}),]]
         -- 如果窗口内容太多，可以滚动
         ["<C-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), {"i", "c"}),
         ["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), {"i", "c"}),
@@ -283,5 +349,19 @@ pluginKeys.cmp = function(cmp)
         -- end of super Tab
     }
 end
+
+-- 自定义 toggleterm 3个不同类型的命令行窗口
+-- <leader>ta 浮动
+-- <leader>tb 右侧
+-- <leader>tc 下方
+-- 特殊lazygit 窗口，需要安装lazygit
+-- <leader>tg lazygit
+pluginKeys.mapToggleTerm = function(toggleterm)
+    vim.keymap.set({"n", "t"}, "<leader>tf", toggleterm.toggleA)
+    vim.keymap.set({"n", "t"}, "<leader>tr", toggleterm.toggleB)
+    vim.keymap.set({"n", "t"}, "<leader>td", toggleterm.toggleC)
+    vim.keymap.set({"n", "t"}, "<leader>tg", toggleterm.toggleG)
+end
+
 
 return pluginKeys
