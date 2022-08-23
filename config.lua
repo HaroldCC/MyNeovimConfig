@@ -137,10 +137,12 @@ lvim.builtin.nvimtree.setup.renderer.icons.show.git = nil
 lvim.builtin.treesitter.ensure_installed = {
   "c",
   "lua",
+  "cpp"
 }
 
 lvim.builtin.treesitter.ignore_install = { "haskell" }
 lvim.builtin.treesitter.highlight.enabled = true
+lvim.builtin.treesitter.rainbow.enable = true
 
 -- generic LSP settings
 
@@ -225,6 +227,10 @@ lvim.builtin.treesitter.highlight.enabled = true
 --       cmd = "TroubleToggle",
 --     },
 -- }
+
+lvim.plugins = {
+     {"p00f/nvim-ts-rainbow"},
+}
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
 -- vim.api.nvim_create_autocmd("BufEnter", {
