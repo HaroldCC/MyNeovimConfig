@@ -248,7 +248,6 @@
 -- --     require("nvim-treesitter.highlight").attach(0, "bash")
 -- --   end,
 -- -- })
-
 --[[
  THESE ARE EXAMPLE CONFIGS FEEL FREE TO CHANGE TO WHATEVER YOU WANT
  `lvim` is the global options object
@@ -279,7 +278,7 @@ vim.g.clipboard = {
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save = false
-lvim.colorscheme = "onedarker"
+lvim.colorscheme = "dracula"
 -- to disable icons and use a minimalist setup, uncomment the following
 -- lvim.use_icons = false
 
@@ -311,8 +310,22 @@ lvim.keys.normal_mode["<C-l>"] = "$"
 lvim.keys.normal_mode["<leader>p"] = "<C-o>"
 lvim.keys.normal_mode["<leader>n"] = "<C-i>"
 
+lvim.keys.normal_mode["<C-h>"] = "<C-w>h"
+lvim.keys.normal_mode["<C-l>"] = "<C-w>l"
+lvim.keys.normal_mode["<C-j>"] = "<C-w>j"
+lvim.keys.normal_mode["<C-k>"] = "<C-w>k"
+
+lvim.keys.normal_mode[">"] = "<C-w>>"
+lvim.keys.normal_mode["<"] = "<C-w><"
+lvim.keys.normal_mode[","] = "<C-w>+"
+lvim.keys.normal_mode["."] = "<C-w>-"
+
+lvim.keys.normal_mode["<C-c>"] = "y"
+
+lvim.keys.normal_mode["<leader>t"] = "<cmd>FloatermNew<cr>"
+
 -- todo 
---lvim.keys.normal_mode["<C-//>"] = "<Plug>(comment_toggle_linewise_current)"
+--lvim.keys.normal_mode["<C-/>"] = "<cmd>comment_toggle_linewise_current"
 
 lvim.keys.normal_mode["vv"] = "<C-v>"
 -- lvim.keys.normal_mode["<S-l>"] = ":BufferLineCycleNext<CR>"
@@ -373,7 +386,7 @@ vim.bo.expandtab = true
 lvim.builtin.alpha.active = true
 lvim.builtin.alpha.mode = "dashboard"
 lvim.builtin.notify.active = true
-lvim.builtin.terminal.active = false
+lvim.builtin.terminal.active = true
 -- lvim.builtin.terminal.shell = "pwsh.exe -NoLogo"
 
 -- nvim-tree has some performance issues on windows, see kyazdani42/nvim-tree.lua#549
@@ -483,92 +496,38 @@ lvim.builtin.which_key.mappings.l = vim.tbl_extend("keep", lvim.builtin.which_ke
 --       cmd = "TroubleToggle",
 --     },
 -- }
+ vim.opt.fillchars = {
+    vert = "▕", -- alternatives │
+    fold = " ",
+    eob = " ", -- suppress ~ at EndOfBuffer
+    diff = "╱", -- alternatives = ⣿ ░ ─
+    msgsep = "‾",
+    foldopen = "▾",
+    foldsep = "│",
+    foldclose = "▸",
+  }
 
 lvim.plugins = {
+     {"folke/tokyonight.nvim"},
+     {
+       "folke/trouble.nvim",
+       cmd = "TroubleToggle",
+     },
+    {'Mofiqul/dracula.nvim'},
     {"p00f/nvim-ts-rainbow"},
     {"lukas-reineke/indent-blankline.nvim",
-         setup = function()
-    vim.g.indent_blankline_char = "▏"
-  end,
-  config = function()
-      require("indent_blankline").setup {
-        enabled = true,
-        bufname_exclude = { "README.md" },
-        buftype_exclude = { "terminal", "nofile" },
-        filetype_exclude = {
-          "alpha",
-          "log",
-          "gitcommit",
-          "dapui_scopes",
-          "dapui_stacks",
-          "dapui_watches",
-          "dapui_breakpoints",
-          "dapui_hover",
-          "LuaTree",
-          "dbui",
-          "UltestSummary",
-          "UltestOutput",
-          "vimwiki",
-          "markdown",
-          "json",
-          "txt",
-          "vista",
-          "NvimTree",
-          "git",
-          "TelescopePrompt",
-          "undotree",
-          "flutterToolsOutline",
-          "org",
-          "orgagenda",
-          "help",
-          "startify",
-          "dashboard",
-          "packer",
-          "neogitstatus",
-          "NvimTree",
-          "Outline",
-          "Trouble",
-          "lspinfo",
-          "", -- for all buffers without a file type
-      },
-        show_trailing_blankline_indent = false,
-        show_first_indent_level = false,
-        space_char_blankline = " ",
-        use_treesitter = true,
-        show_foldtext = false,
-        show_current_context = true,
-        show_current_context_start = false,
-        context_patterns = {
-          "class",
-          "return",
-          "function",
-          "method",
-          "^if",
-          "^do",
-          "^switch",
-          "^while",
-          "jsx_element",
-          "^for",
-          "^object",
-          "^table",
-          "block",
-          "arguments",
-          "if_statement",
-          "else_clause",
-          "jsx_element",
-          "jsx_self_closing_element",
-          "try_statement",
-          "catch_clause",
-          "import_statement",
-          "operation_type",
-        },
-      }
-  end,
-  event = "BufRead",},
+        config = function()
+            require("indent_blankline").setup {
+                space_char_blankline = " ",
+                show_current_context = true,
+                show_current_context_start = true,
+                }
+        end},
 
     {"simrat39/symbols-outline.nvim", cmd="SymbolsOutline", config=function()
         require("symbols-outline").setup({})
     end},
+    {'voldikss/vim-floaterm'},
 }
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
