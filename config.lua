@@ -65,13 +65,16 @@ lvim.keys.normal_mode["vv"] = "<C-v>"
 -- lvim.keys.normal_mode["<A-k"] = "<C-k>"
 
 -- 不可见字符的显示，这里只把空格显示为一个点
-vim.o.list = true
-vim.o.listchars = "space:·"
-vim.o.listchars = "tab:->"
+vim.opt.list = true
+vim.opt.listchars = 
+{
+    space = "·",
+    tab = "»"
+}
 
 -- 设置缩进
 vim.o.tabstop = 4
-vim.softtabstop = 4
+vim.opt.softtabstop = 4
 vim.bo.tabstop = 4
 vim.o.shiftwidth = 4
 vim.bo.shiftwidth = 4
