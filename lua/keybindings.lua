@@ -186,7 +186,7 @@ map("n", "<C-p>", ":Telescope find_files<CR>", opt)
 -- 全局搜索
 map("n", "<C-f>", ":Telescope live_grep<CR>", opt)
 
-local actions = require "telescope.actions"
+--local actions = require "telescope.actions"
 
 pluginKeys.telescopeList = {
     i = {
