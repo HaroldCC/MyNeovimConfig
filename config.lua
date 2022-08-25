@@ -52,7 +52,7 @@
 
 -- lvim.keys.normal_mode["<leader><leader><tab>"] = "<cmd>BufferLineCyclePrev<cr>"
 -- lvim.keys.normal_mode["<leader><tab>"] = "<cmd>BufferLineCycleNext<cr>"
--- -- todo 
+-- -- todo
 -- lvim.keys.normal_mode["<C-//>"] = "<Plug>(comment_toggle_linewise_current)"
 
 -- lvim.keys.normal_mode["vv"] = "<C-v>"
@@ -66,7 +66,7 @@
 
 -- -- 不可见字符的显示，这里只把空格显示为一个点
 -- vim.opt.list = true
--- vim.opt.listchars = 
+-- vim.opt.listchars =
 -- {
 --     space = "·",
 --     tab = "»"
@@ -256,7 +256,7 @@
 -- Enable powershell as your default shell
 vim.opt.shell = "pwsh.exe -NoLogo"
 vim.opt.shellcmdflag =
-  "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;"
+"-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;"
 vim.cmd [[
 		let &shellredir = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
 		let &shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
@@ -265,14 +265,14 @@ vim.cmd [[
 
 -- Set a compatible clipboard manager
 vim.g.clipboard = {
-  copy = {
-    ["+"] = "win32yank.exe -i --crlf",
-    ["*"] = "win32yank.exe -i --crlf",
-  },
-  paste = {
-    ["+"] = "win32yank.exe -o --lf",
-    ["*"] = "win32yank.exe -o --lf",
-  },
+    copy = {
+        ["+"] = "win32yank.exe -i --crlf",
+        ["*"] = "win32yank.exe -i --crlf",
+    },
+    paste = {
+        ["+"] = "win32yank.exe -o --lf",
+        ["*"] = "win32yank.exe -o --lf",
+    },
 }
 
 -- general
@@ -324,8 +324,14 @@ lvim.keys.normal_mode["<C-c>"] = "y"
 
 lvim.keys.normal_mode["<leader>t"] = "<cmd>FloatermNew<cr>"
 
--- todo 
+-- todo
 --lvim.keys.normal_mode["<C-/>"] = "<cmd>comment_toggle_linewise_current"
+
+lvim.keys.normal_mode["<leader>sF"] = '<cmd>Telescope file_browser<cr>'
+lvim.keys.normal_mode["<leader>ff"] = require("lvim.core.telescope.custom-finders").find_project_files
+lvim.keys.normal_mode["<leader>fa"] = '<cmd>Telescope live_grep_args<cr>'
+lvim.keys.normal_mode["<leader>sm"] = '<cmd>Telescope marks<cr>'
+lvim.keys.normal_mode["<leader>sm"] = '<cmd>Telescope marks<cr>'
 
 lvim.keys.normal_mode["vv"] = "<C-v>"
 -- lvim.keys.normal_mode["<S-l>"] = ":BufferLineCycleNext<CR>"
@@ -351,6 +357,9 @@ vim.bo.shiftwidth = 4
 
 vim.opt.expandtab = true
 vim.bo.expandtab = true
+
+lvim.builtin.telescope.pickers.find_files.theme ="dropdown"
+lvim.builtin.telescope.pickers.find_files.find_command={"fd"}
 
 -- Change Telescope navigation to use j and k for navigation and n and p for history in both input and normal mode.
 -- we use protected-mode (pcall) just in case the plugin wasn't loaded yet.
@@ -401,17 +410,18 @@ lvim.builtin.nvimtree.setup.renderer.icons.show.git = nil
 
 -- if you don't want all the parsers change this to a table of the ones you want
 lvim.builtin.treesitter.ensure_installed = {
-  "c",
-  "lua",
-  "cpp",
+    "c",
+    "lua",
+    "cpp",
 }
 
 lvim.builtin.treesitter.ignore_install = { "haskell" }
 lvim.builtin.treesitter.highlight.enabled = true
 lvim.builtin.treesitter.rainbow.enable = true
-lvim.builtin.treesitter.rainbow.colors = {"#ddaaaa", "#ab6985", "#D6A760", "#7794f4", "#b38bf5", "#7cc7fe"}
+lvim.builtin.treesitter.rainbow.colors = { "#ddaaaa", "#ab6985", "#D6A760", "#7794f4", "#b38bf5", "#7cc7fe" }
 
-lvim.builtin.which_key.mappings.l = vim.tbl_extend("keep", lvim.builtin.which_key.mappings.l,{o={"<cmd>SymbolsOutline<cr>", "Open Outline"}})
+lvim.builtin.which_key.mappings.l = vim.tbl_extend("keep", lvim.builtin.which_key.mappings.l,
+    { o = { "<cmd>SymbolsOutline<cr>", "Open Outline" } })
 
 -- generic LSP settings
 
@@ -496,7 +506,7 @@ lvim.builtin.which_key.mappings.l = vim.tbl_extend("keep", lvim.builtin.which_ke
 --       cmd = "TroubleToggle",
 --     },
 -- }
- vim.opt.fillchars = {
+vim.opt.fillchars = {
     vert = "▕", -- alternatives │
     fold = " ",
     eob = " ", -- suppress ~ at EndOfBuffer
@@ -505,29 +515,86 @@ lvim.builtin.which_key.mappings.l = vim.tbl_extend("keep", lvim.builtin.which_ke
     foldopen = "▾",
     foldsep = "│",
     foldclose = "▸",
-  }
+}
 
 lvim.plugins = {
-     {"folke/tokyonight.nvim"},
-     {
-       "folke/trouble.nvim",
-       cmd = "TroubleToggle",
-     },
-    {'Mofiqul/dracula.nvim'},
-    {"p00f/nvim-ts-rainbow"},
-    {"lukas-reineke/indent-blankline.nvim",
+    { "folke/tokyonight.nvim" },
+    {
+        "folke/trouble.nvim",
+        cmd = "TroubleToggle",
+    },
+    { 'Mofiqul/dracula.nvim' },
+    { "p00f/nvim-ts-rainbow" },
+    { "lukas-reineke/indent-blankline.nvim",
         config = function()
             require("indent_blankline").setup {
                 space_char_blankline = " ",
                 show_current_context = true,
                 show_current_context_start = true,
-                }
-        end},
+            }
+        end },
 
-    {"simrat39/symbols-outline.nvim", cmd="SymbolsOutline", config=function()
+    { "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline", config = function()
         require("symbols-outline").setup({})
-    end},
-    {'voldikss/vim-floaterm'},
+    end
+    },
+    { 'voldikss/vim-floaterm' },
+    { 'fgheng/winbar.nvim',
+        config = function()
+            require('winbar').setup({
+                enabled = true,
+
+                show_file_path = true,
+                show_symbols = true,
+
+                colors = {
+                    path = '', -- You can customize colors like #c946fd
+                    file_name = '',
+                    symbols = '',
+                },
+
+                icons = {
+                    file_icon_default = '',
+                    seperator = '>',
+                    editor_state = '●',
+                    lock_icon = '',
+                },
+
+                exclude_filetype = {
+                    'help',
+                    'startify',
+                    'dashboard',
+                    'packer',
+                    'neogitstatus',
+                    'NvimTree',
+                    'Trouble',
+                    'alpha',
+                    'lir',
+                    'Outline',
+                    'spectre_panel',
+                    'toggleterm',
+                    'qf',
+                }
+            })
+        end
+    },
+    {
+        "SmiteshP/nvim-gps",
+        requires = "nvim-treesitter/nvim-treesitter",
+        config = function()
+            require("nvim-gps").setup()
+        end
+    },
+    { "nvim-telescope/telescope-live-grep-args.nvim",
+      config = function()
+        require("telescope").load_extension("live_grep_args")
+      end
+    },
+    {"MattesGroeger/vim-bookmarks",
+      config = function()
+        require("telescope").load_extension("vim-bookmarks")
+      end
+    }
 }
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
