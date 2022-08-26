@@ -6,7 +6,7 @@
 -- Enable powershell as your default shell
 vim.opt.shell = "pwsh.exe -NoLogo"
 vim.opt.shellcmdflag =
-"-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;"
+  "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;"
 vim.cmd [[
 		let &shellredir = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
 		let &shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
@@ -15,14 +15,14 @@ vim.cmd [[
 
 -- Set a compatible clipboard manager
 vim.g.clipboard = {
-    copy = {
-        ["+"] = "win32yank.exe -i --crlf",
-        ["*"] = "win32yank.exe -i --crlf",
-    },
-    paste = {
-        ["+"] = "win32yank.exe -o --lf",
-        ["*"] = "win32yank.exe -o --lf",
-    },
+  copy = {
+    ["+"] = "win32yank.exe -i --crlf",
+    ["*"] = "win32yank.exe -i --crlf",
+  },
+  paste = {
+    ["+"] = "win32yank.exe -o --lf",
+    ["*"] = "win32yank.exe -o --lf",
+  },
 }
 
 -- general
@@ -60,10 +60,10 @@ lvim.keys.normal_mode["<C-l>"] = "$"
 lvim.keys.normal_mode["<leader>p"] = "<C-o>"
 lvim.keys.normal_mode["<leader>n"] = "<C-i>"
 
-lvim.keys.normal_mode["<C-h>"] = "<C-w>h"
-lvim.keys.normal_mode["<C-l>"] = "<C-w>l"
-lvim.keys.normal_mode["<C-j>"] = "<C-w>j"
-lvim.keys.normal_mode["<C-k>"] = "<C-w>k"
+lvim.keys.normal_mode["<A-h>"] = "<C-w>h"
+lvim.keys.normal_mode["<A-l>"] = "<C-w>l"
+lvim.keys.normal_mode["<A-j>"] = "<C-w>j"
+lvim.keys.normal_mode["<A-k>"] = "<C-w>k"
 
 lvim.keys.normal_mode[">"] = "<C-w>>"
 lvim.keys.normal_mode["<"] = "<C-w><"
@@ -91,6 +91,26 @@ lvim.builtin.which_key.mappings.f = { c = { require("lvim.core.telescope.custom-
 -- -v 反转匹配
 -- -g 通配符文件或文件夹，可以用!来取反
 lvim.builtin.which_key.mappings.f = { a = { "<cmd>Telescope live_grep_args<cr>", "live_grep_args" } }
+
+vim.cmd("set noautochdir")
+
+-- -- vim默认删除快捷键设置
+vim.cmd('nnoremap dd "_dd')
+vim.cmd('nnoremap <leader>dd ""dd')
+vim.cmd('nnoremap d "_d')
+vim.cmd('nnoremap <leader>d ""d')
+vim.cmd('nnoremap D "_D')
+vim.cmd('nnoremap <leader>D ""D')
+vim.cmd('nnoremap dw "_dw')
+vim.cmd('nnoremap <leader>dw ""dw')
+vim.cmd('nnoremap daw "_daw')
+vim.cmd('nnoremap <leader>daw ""daw')
+vim.cmd('nnoremap x "_x')
+vim.cmd('nnoremap <leader>x ""x')
+vim.cmd('nnoremap p ""p')
+
+-- todo 
+--lvim.keys.normal_mode["<C-/>"] = "<cmd>comment_toggle_linewise_current"
 
 lvim.keys.normal_mode["vv"] = "<C-v>"
 -- lvim.keys.normal_mode["<S-l>"] = ":BufferLineCycleNext<CR>"
@@ -170,18 +190,17 @@ lvim.builtin.nvimtree.setup.renderer.icons.show.git = nil
 
 -- if you don't want all the parsers change this to a table of the ones you want
 lvim.builtin.treesitter.ensure_installed = {
-    "c",
-    "lua",
-    "cpp",
+  "c",
+  "lua",
+  "cpp",
 }
 
 lvim.builtin.treesitter.ignore_install = { "haskell" }
 lvim.builtin.treesitter.highlight.enabled = true
 lvim.builtin.treesitter.rainbow.enable = true
-lvim.builtin.treesitter.rainbow.colors = { "#ddaaaa", "#ab6985", "#D6A760", "#7794f4", "#b38bf5", "#7cc7fe" }
+lvim.builtin.treesitter.rainbow.colors = {"#ddcccc", "#ab6985", "#D6A760", "#7794f4", "#b38bf5", "#7cc7fe"}
 
-lvim.builtin.which_key.mappings.l = vim.tbl_extend("keep", lvim.builtin.which_key.mappings.l,
-    { o = { "<cmd>SymbolsOutline<cr>", "Open Outline" } })
+lvim.builtin.which_key.mappings.l = vim.tbl_extend("keep", lvim.builtin.which_key.mappings.l,{o={"<cmd>SymbolsOutline<cr>", "Open Outline"}})
 
 -- generic LSP settings
 
@@ -266,7 +285,7 @@ lvim.builtin.which_key.mappings.l = vim.tbl_extend("keep", lvim.builtin.which_ke
 --       cmd = "TroubleToggle",
 --     },
 -- }
-vim.opt.fillchars = {
+ vim.opt.fillchars = {
     vert = "▕", -- alternatives │
     fold = " ",
     eob = " ", -- suppress ~ at EndOfBuffer
@@ -275,31 +294,42 @@ vim.opt.fillchars = {
     foldopen = "▾",
     foldsep = "│",
     foldclose = "▸",
-}
+  }
 
 lvim.plugins = {
-    { "folke/tokyonight.nvim" },
-    {
-        "folke/trouble.nvim",
-        cmd = "TroubleToggle",
-    },
-    { 'Mofiqul/dracula.nvim' },
-    { "p00f/nvim-ts-rainbow" },
-    { "lukas-reineke/indent-blankline.nvim",
+     {"folke/tokyonight.nvim"},
+     {
+       "folke/trouble.nvim",
+       cmd = "TroubleToggle",
+     },
+    {'Mofiqul/dracula.nvim'},
+    {"p00f/nvim-ts-rainbow"},
+    {"lukas-reineke/indent-blankline.nvim",
         config = function()
             require("indent_blankline").setup {
                 space_char_blankline = " ",
                 show_current_context = true,
                 show_current_context_start = true,
-            }
-        end },
+                }
+        end},
 
-    { "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline", config = function()
+    {"simrat39/symbols-outline.nvim", cmd="SymbolsOutline", config=function()
         require("symbols-outline").setup({})
-    end
+    end},
+    {'voldikss/vim-floaterm'},
+
+    {
+      "folke/todo-comments.nvim",
+      requires = "nvim-lua/plenary.nvim",
+      config = function()
+        require("todo-comments").setup {
+          -- your configuration comes here
+          -- or leave it empty to use the default settings
+          -- refer to the configuration section below
+        }
+      end
     },
-    { 'voldikss/vim-floaterm' },
-    { 'fgheng/winbar.nvim',
+        { 'fgheng/winbar.nvim',
         config = function()
             require('winbar').setup({
                 enabled = true,
