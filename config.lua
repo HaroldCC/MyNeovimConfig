@@ -304,13 +304,13 @@ lvim.plugins = {
             require('winbar').setup({
                 enabled = true,
 
-                show_file_path = true,
+                show_file_path = false,
                 show_symbols = true,
 
                 colors = {
-                    path = '#c946fd', -- You can customize colors like #c946fd
-                    file_name = '#ccddaa',
-                    symbols = '#aadddd',
+                    path = '', -- You can customize colors like #c946fd
+                    file_name = '',
+                    symbols = '',
                 },
 
                 icons = {
@@ -370,3 +370,126 @@ lvim.plugins = {
 --     require("nvim-treesitter.highlight").attach(0, "bash")
 --   end,
 -- })
+
+-- custom dashboard
+local function get_sections()
+    local header = {
+        type = "text",
+        val = {
+            [[                                                                   ]],
+            [[                                                                   ]],
+            [[                                                                   ]],
+            [[                $               $@@@@n$                            ]],
+            [[              -@@@^            @@@@@@$          z@@@@              ]],
+            [[             @@@@@@@@         @@@@@@@         @@@@@@@@!            ]],
+            [[           u -@@@@@@@@@^     @@@@@@@@@     z@@@@@@@@@@ u           ]],
+            [[          a@@8 @@@@@@@@@@@  ;@@@@@@@@@@  @@@@@@@@@@@  @@~          ]],
+            [[          @@@@@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@$ @@@@@8         ]],
+            [[         @@@@@@@! !@@@@@@@@@@@@@@@@@@@@@@@@@@@@@a 8@@@@@@@         ]],
+            [[         @@@@@ @@@8 ^@@@@@@@@@@@@@@@@@@@@@@@@@-  @@@ @@@@@8        ]],
+            [[        +@@@ @@@@@@@  @@@@@@@@@@@@@@@@@@@@@@@  @@@@@@@ @@@-        ]],
+            [[        --8@@@@@@@@@-a  @@@@@@@@@@@@@@@@@@@  1+@@@@@@@@@6-@        ]],
+            [[        o@@@@@@@@@@8@@@% 8@@@@@@@@@@@@@@@!  @@@!@@@@@@@@@@;        ]],
+            [[         @@@@@@@@ @@@@@@@  o@@@@@@@@@@@+  @@@@@@@$@@@@@@@@;        ]],
+            [[         @@@@@@ @@@@@@@@@    @@@@@@@@@    @@@@@@@@@ @@@@@@         ]],
+            [[         a@@@!@@@@@@@@@8   z@@ @@@@@ @@^   %@@@@@@@@@8@@@@         ]],
+            [[          @~+@@@@@@@@-    @@@@@@ @8-@@@@@    +@@@@@@@@-n@          ]],
+            [[           @@@@@@@@@     @@@@@@@@-@@@@@@@@8    @@@@@@@@@           ]],
+            [[            @@@@@@a    ^@@@@@@@@@@@@@@@@@@@-    !@@@@@@            ]],
+            [[              @@@     @@@@@@@@@@@@@@@@@@@@@@@     @@@8             ]],
+            [[                    %@@@@@@@@@@@@@@@@@@@@@@@@@a                    ]],
+            [[                   -@@@@@@@@@@@@@@@@@@@@@@@@@@@@                   ]],
+            [[                    %@@@@@@@@@@@@@@@@@@@@@@@@@1                    ]],
+            [[                        %-@@@@@@@@@@@@@@@@3                        ]],
+            [[                                                                   ]],
+            [[                                                                   ]],
+            [[                                                                   ]],
+            [[                     🐤🤞🤗🐲🐳🔱🌤️🚌🍁🍉🥟🕯️🏹🏀                  ]],
+        },
+        opts = {
+            position = "center",
+            hl = "Label",
+        },
+    }
+
+    local text = require "lvim.interface.text"
+    local lvim_version = require("lvim.utils.git").get_lvim_version()
+
+    local footer = {
+        type = "text",
+        val = text.align_center({ width = 0 }, {
+            "",
+            "lunarvim.org",
+            lvim_version,
+        }, 0.5),
+        opts = {
+            position = "center",
+            hl = "Number",
+        },
+    }
+
+    local buttons = {
+        entries = {
+            { "SPC f", "  Find File", "<CMD>Telescope find_files<CR>" },
+            { "SPC n", "  New File", "<CMD>ene!<CR>" },
+            { "SPC P", "  Recent Projects ", "<CMD>Telescope projects<CR>" },
+            { "SPC s r", "  Recently Used Files", "<CMD>Telescope oldfiles<CR>" },
+            { "SPC s t", "  Find Word", "<CMD>Telescope live_grep<CR>" },
+            {
+                "SPC L c",
+                "  Configuration",
+                "<CMD>edit " .. require("lvim.config"):get_user_config_path() .. " <CR>",
+            },
+        },
+    }
+
+    return {
+        header = header,
+        buttons = buttons,
+        footer = footer,
+    }
+end
+
+lvim.builtin.alpha.dashboard = { config = {}, section = get_sections() }
+
+vim.opt.termguicolors = true
+local bg = vim.fn.synIDattr(vim.fn.hlID("Normal"), "bg")
+lvim.builtin.bufferline.options = {
+    options = {
+        show_close_icon = false,
+        custom_areas = {
+            left = function()
+                local _mode_me = vim.fn.mode()
+                local result = {}
+                -- print(_mode_me)  -- print model name
+                if _mode_me == 'n' then
+                    table.insert(result, { text = "   ", guifg = "#2C6881", guibg = bg })
+
+                elseif _mode_me == 'i' then
+                    table.insert(result, { text = "   ", guifg = "#713A50", guibg = bg })
+
+                elseif _mode_me == 'c' then
+                    table.insert(result, { text = "   ", guifg = "#19E5A6", guibg = bg })
+
+                elseif _mode_me == 'v' or _mode_me == 'V' then
+                    table.insert(result, { text = "   ", guifg = "#2ABCD7", guibg = bg })
+
+                else
+                    table.insert(result, { text = "   ", guifg = "#713A50", guibg = bg })
+
+                end
+                return result
+            end,
+            right = function()
+                local result = {}
+                return result
+            end
+        }
+    }
+}
+
+vim.cmd([[
+  hi BufferLinePickSelected gui=none
+  hi BufferLinePick gui=none
+  hi BufferLinePickVisible gui=none
+]])
